@@ -1,7 +1,7 @@
 ﻿SetTitleMatchMode, 2  ;
 
-TaiKhoan := "tien"
-SoTien := 10000
+TaiKhoan := "minhduc"
+SoTien := 5000
 BlockInput, On  ;
 WinActivate, GCafe+ server 1.7.45 [ADMIN (Điều hành)] ;
 WinWaitActive, GCafe+ server 1.7.45 [ADMIN (Điều hành)] ;

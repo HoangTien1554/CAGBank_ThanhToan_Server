@@ -1,4 +1,5 @@
 {
+    "ahk_file": "CAGBank_NapTien_FNet.ahk",
     "api_key": "AK_CS.6507d3700ab711f097089522635f3f80.1gLQbfnm3eO9TqwMfBVgGkUVeIwqKBqbroCyXAjoN53uuHZ6yQ6Ezfq7mf9AUnYDdZ2ASgxZ",
-    "url": "https://oauth.casso.vn/v2/transactions?fromDate=2021-04-01&page=1&pageSize=10&sort=ASC"
+    "api_url": "https://oauth.casso.vn/v2/transactions?fromDate=2025-03-28&page=1&pageSize=10&sort=ASC"
 }

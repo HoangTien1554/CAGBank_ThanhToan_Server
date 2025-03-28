@@ -1,18 +1,18 @@
 import requests
-import re  # Thư viện regex để trích xuất thông tin
-import time  # Để dừng chương trình một khoảng thời gian trước khi kiểm tra lại
-import json  # Để làm việc với tệp JSON
+import re
+import time
+import json
 import os
-ahk_file = "CAGBank_NapTien_Gcafe.ahk"
 
-TaiKhoan = "tien"  # Giá trị mới cho TaiKhoan
-SoTien = 100000  # Giá trị mới cho SoTien
+def load_config():
+    with open("config.json", "r", encoding="utf-8") as file:
+        return json.load(file)
 
-# Thay API Key của bạn vào đây
-API_KEY = "AK_CS.6507d3700ab711f097089522635f3f80.1gLQbfnm3eO9TqwMfBVgGkUVeIwqKBqbroCyXAjoN53uuHZ6yQ6Ezfq7mf9AUnYDdZ2ASgxZ"
+config = load_config()
 
-# URL API của Casso
-URL = "https://oauth.casso.vn/v2/transactions?fromDate=2025-03-28&page=1&pageSize=10&sort=ASC"
+ahk_file = config["ahk_file"]
+API_KEY = config["api_key"]
+URL = config["api_url"]
 
 # Headers (sử dụng API Key)
 headers = {
@@ -23,85 +23,100 @@ headers = {
 def load_processed_transactions():
     try:
         with open('processed_transactions.json', 'r', encoding='utf-8') as file:
-            return json.load(file)  # Trả về danh sách các giao dịch đã xử lý
+            return json.load(file)
     except FileNotFoundError:
-        return []  # Nếu tệp không tồn tại, trả về danh sách rỗng
+        return []
 
 # Lưu các giao dịch đã xử lý vào tệp JSON
 def save_processed_transactions(processed_transactions):
     with open('processed_transactions.json', 'w', encoding='utf-8') as file:
-        json.dump(processed_transactions, file, indent=4)  # Ghi các giao dịch đã xử lý vào tệp JSON
+        json.dump(processed_transactions, file, indent=4, ensure_ascii=False)
 
 # Gửi yêu cầu GET và lấy danh sách giao dịch
 def get_transactions():
-    # Gửi yêu cầu GET
     response = requests.get(URL, headers=headers)
 
-    # Kiểm tra mã trạng thái HTTP
     if response.status_code == 200:
-        data = response.json()  # Chuyển phản hồi thành JSON
+        data = response.json()
+        transactions = data.get("data", {}).get("records", [])
 
-        # Kiểm tra "data" có tồn tại không
-        transactions_data = data.get("data", {})
-        records = transactions_data.get("records", [])
+        # Chỉ lấy giao dịch tiền vào (amount > 0)
+        incoming_transactions = [t for t in transactions if t["amount"] > 0]
 
-        return records
+        return incoming_transactions
     else:
         print(f"Lỗi API: {response.status_code} - {response.text}")
         return []
 
-# Lấy danh sách các giao dịch đã xử lý
+# Chỉnh sửa file AHK và chạy AutoHotkey
+def execute_transaction(content, amount):
+    with open(ahk_file, "r", encoding="utf-8") as file:
+        lines = file.readlines()
+
+    # Duyệt qua từng dòng và thay đổi giá trị của TaiKhoan và SoTien
+    for i, line in enumerate(lines):
+        if "TaiKhoan := " in line:
+            lines[i] = f'TaiKhoan := "{content}"\n'
+        if "SoTien := " in line:
+            lines[i] = f"SoTien := {amount}\n"
+
+    # Ghi lại các thay đổi vào file .ahk
+    with open(ahk_file, "w", encoding="utf-8") as file:
+        file.writelines(lines)
+
+    # Mở file .ahk để thực hiện giao dịch
+    os.startfile(ahk_file)
+
+# Danh sách các giao dịch đã xử lý
 processed_transactions = load_processed_transactions()
 
-# Chạy liên tục để kiểm tra giao dịch mới
+# Lặp vô hạn để kiểm tra API mỗi 31 giây
 while True:
     records = get_transactions()
+    new_transactions = []
 
     if records:
         for transaction in records:
-            transaction_id = transaction.get("id")  # Lấy ID giao dịch
-            description = transaction.get("description", "")  # Lấy nội dung giao dịch
-            amount = transaction.get("amount", "N/A")  # Lấy số tiền giao dịch
+            transaction_id = transaction.get("id")
+            description = transaction.get("description", "")
+            amount = transaction.get("amount", "N/A")
+            date = transaction.get("when", "").replace("T", " - ")
 
-            # Kiểm tra xem giao dịch đã được xử lý chưa
-            if transaction_id not in [trans['id'] for trans in processed_transactions]:
-                # Nếu giao dịch mới, tìm và lưu nội dung giữa 'IBFT' và 'GD'
-                match = re.search(r'IBFT(.*?)GD', description)
+
+
+            # Kiểm tra xem giao dịch đã có trong danh sách chưa
+            existing_transaction = next((t for t in processed_transactions if t["id"] == transaction_id), None)
+
+            if not existing_transaction:
+                match = re.search(r'([a-z0-9\s]+)(?=\s*\d{6,}|\s*QR\s*|\s*GD|\s*$)', description)
                 if match:
-                    content_between_IBFT_and_GD = match.group(1).strip()  # Lấy nội dung giữa 'IBFT' và 'GD'
+                    content = match.group().strip()
 
-                    # Lưu thông tin giao dịch vào danh sách đã xử lý
-                    processed_transactions.append({
+                    new_transaction = {
                         "id": transaction_id,
-                        "content": content_between_IBFT_and_GD,  # Lưu nội dung giữa 'IBFT' và 'GD'
+                        "content": content,
+                        "datetime": date,
                         "amount": amount,
+                        "status": "Chưa nạp tiền"  # Chưa thực hiện
+                    }
+                    new_transactions.append(new_transaction)
+                    processed_transactions.append(new_transaction)
 
-                    })
-
-                    with open(ahk_file, "r", encoding="utf-8") as file:
-                        lines = file.readlines()
-
-                    # Duyệt qua từng dòng và thay đổi giá trị của TaiKhoan và SoTien
-                    for i, line in enumerate(lines):
-                        if "TaiKhoan := " in line:  # Tìm dòng chứa TaiKhoan
-                            lines[i] = f'TaiKhoan := "{content_between_IBFT_and_GD}"\n'  # Thay thế giá trị mới
-                        if "SoTien := " in line:  # Tìm dòng chứa SoTien
-                            lines[i] = f"SoTien := {amount}\n"  # Thay thế giá trị mới
-
-                    # Ghi lại các thay đổi vào file .ahk
-                    with open(ahk_file, "w", encoding="utf-8") as file:
-                        file.writelines(lines)
-
-                    # Mở file .ahk sau khi thay đổi
-                    # Sử dụng os.startfile() để mở file bằng chương trình mặc định liên kết với .ahk (AutoHotkey)
-                    os.startfile(ahk_file)
-
-        # Lưu lại danh sách các giao dịch đã xử lý vào tệp JSON
+        # Lưu lại danh sách giao dịch đã cập nhật
         save_processed_transactions(processed_transactions)
 
+    # Thực hiện giao dịch có status rỗng, mỗi 3 giây
+    pending_transactions = [t for t in processed_transactions if t["status"] == "Chưa nạp tiền"]
 
+    for transaction in pending_transactions:
+        execute_transaction(transaction["content"], transaction["amount"])
+        print(f"Thực hiện giao dịch: {transaction['content']} - {transaction['amount']} VND")
 
-    # Chờ 10 giây trước khi kiểm tra lại giao dịch mới
+        # Cập nhật trạng thái thành "Đã nạp tiền"
+        transaction["status"] = "Đã nạp tiền"
+        save_processed_transactions(processed_transactions)
+
+        time.sleep(3.5)  # Chờ 3 giây trước khi thực hiện giao dịch tiếp theo
+
+    # Đợi 31 giây trước khi kiểm tra API tiếp
     time.sleep(31)
-
-
