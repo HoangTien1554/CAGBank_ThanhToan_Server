@@ -12,7 +12,7 @@ SoTien = 100000  # Giá trị mới cho SoTien
 API_KEY = "AK_CS.6507d3700ab711f097089522635f3f80.1gLQbfnm3eO9TqwMfBVgGkUVeIwqKBqbroCyXAjoN53uuHZ6yQ6Ezfq7mf9AUnYDdZ2ASgxZ"
 
 # URL API của Casso
-URL = "https://oauth.casso.vn/v2/transactions?fromDate=2021-04-01&page=1&pageSize=10&sort=ASC"
+URL = "https://oauth.casso.vn/v2/transactions?fromDate=2025-03-28&page=1&pageSize=10&sort=ASC"
 
 # Headers (sử dụng API Key)
 headers = {
@@ -74,7 +74,8 @@ while True:
                     processed_transactions.append({
                         "id": transaction_id,
                         "content": content_between_IBFT_and_GD,  # Lưu nội dung giữa 'IBFT' và 'GD'
-                        "amount": amount
+                        "amount": amount,
+
                     })
 
                     with open(ahk_file, "r", encoding="utf-8") as file:
@@ -90,8 +91,6 @@ while True:
                     # Ghi lại các thay đổi vào file .ahk
                     with open(ahk_file, "w", encoding="utf-8") as file:
                         file.writelines(lines)
-
-                    print(f"Đã thay đổi TaiKhoan thành '{TaiKhoan}' và SoTien thành {SoTien} trong file {ahk_file}")
 
                     # Mở file .ahk sau khi thay đổi
                     # Sử dụng os.startfile() để mở file bằng chương trình mặc định liên kết với .ahk (AutoHotkey)
