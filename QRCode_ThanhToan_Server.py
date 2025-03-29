@@ -13,8 +13,6 @@ def load_config():
 
 config = load_config()
 
-
-
 ahk_file = config["ahk_file"]
 API_KEY = config["api_key"]
 URL = config["api_url"]
@@ -55,8 +53,8 @@ def get_transactions():
 
 # Chỉnh sửa file AHK và chạy AutoHotkey
 def execute_transaction(content, amount):
-    ahk_file = os.path.join("ahk", "CAGBank_NapTien_Gcafe.ahk")
-    with open(ahk_file, "r", encoding="utf-8") as file:
+    ahk_run = os.path.normpath(os.path.join("ahk", ahk_file))
+    with open(ahk_run, "r", encoding="utf-8") as file:
         lines = file.readlines()
 
     # Duyệt qua từng dòng và thay đổi giá trị của TaiKhoan và SoTien
@@ -65,13 +63,14 @@ def execute_transaction(content, amount):
             lines[i] = f'TaiKhoan := "{content}"\n'
         if "SoTien := " in line:
             lines[i] = f"SoTien := {amount}\n"
+            break
 
     # Ghi lại các thay đổi vào file .ahk
-    with open(ahk_file, "w", encoding="utf-8") as file:
+    with open(ahk_run, "w", encoding="utf-8") as file:
         file.writelines(lines)
 
     # Mở file .ahk để thực hiện giao dịch
-    os.startfile(ahk_file)
+    os.startfile(ahk_run)
 
 # Danh sách các giao dịch đã xử lý
 processed_transactions = load_processed_transactions()
@@ -87,8 +86,6 @@ while True:
             description = transaction.get("description", "")
             amount = transaction.get("amount", "N/A")
             date = transaction.get("when", "").replace("T", " - ")
-
-
 
             # Kiểm tra xem giao dịch đã có trong danh sách chưa
             existing_transaction = next((t for t in processed_transactions if t["id"] == transaction_id), None)
@@ -116,7 +113,6 @@ while True:
 
     for transaction in pending_transactions:
         execute_transaction(transaction["content"], transaction["amount"])
-        print(f"Thực hiện giao dịch: {transaction['content']} - {transaction['amount']} VND")
 
         # Cập nhật trạng thái thành "Đã nạp tiền"
         transaction["status"] = "Đã nạp tiền"
