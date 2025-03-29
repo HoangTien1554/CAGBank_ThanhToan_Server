@@ -14,7 +14,7 @@ config_path = "data/config.json"
 file_path = "data/processed_transactions.json"
 txt_file = "data/daily_summary.txt"
 
-server_script = os.path.join(os.path.dirname(__file__), "QRCode_ThanhToan_Server.py")
+# server_script = os.path.join(os.path.dirname(__file__), "QRCode_ThanhToan_Server.py")
 
 # Hàm đọc file JSON
 def read_json(file):
@@ -260,6 +260,13 @@ def on_closing():
     """Ẩn cửa sổ chính thay vì đóng hẳn ứng dụng"""
     root.withdraw()
 
+def run_qrcode_server():
+    exe_path = os.path.join(os.getcwd(), "dist/QRCode_ThanhToan_Server.exe")  # Đường dẫn file exe
+    try:
+        subprocess.Popen(exe_path, creationflags=subprocess.CREATE_NO_WINDOW)  # Chạy ẩn cửa sổ
+    except FileNotFoundError:
+        print("Lỗi: Không tìm thấy file QRCode_ThanhToan_Server.exe!")
+
 # Giao diện chính
 root = tk.Tk()
 root.title("Danh Sách Giao Dịch")
@@ -299,8 +306,10 @@ total_label.pack(pady=5, side="right", padx=5)
 # Gọi hàm cập nhật dữ liệu
 update_transactions()
 
-# Chạy file QRCode_ThanhToan_Server.py trong nền
-subprocess.Popen(["python", server_script], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+# # Chạy file QRCode_ThanhToan_Server.py trong nền
+# subprocess.Popen(["python", server_script], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+run_qrcode_server()
 
 # Chạy System Tray trong luồng khác để không chặn giao diện
 threading.Thread(target=create_tray_icon, daemon=True).start()

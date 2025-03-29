@@ -1,0 +1,128 @@
+('C:\\Users\\CAG '
+ 'PRO\\PycharmProjects\\CAGBank_Main\\build\\QRCode_ThanhToan_Server\\QRCode_ThanhToan_Server.pkg',
+ {'BINARY': True,
+  'DATA': True,
+  'EXECUTABLE': True,
+  'EXTENSION': True,
+  'PYMODULE': True,
+  'PYSOURCE': True,
+  'PYZ': False,
+  'SPLASH': True,
+  'SYMLINK': False},
+ [('pyi-contents-directory _internal', '', 'OPTION'),
+  ('PYZ-00.pyz',
+   'C:\\Users\\CAG '
+   'PRO\\PycharmProjects\\CAGBank_Main\\build\\QRCode_ThanhToan_Server\\PYZ-00.pyz',
+   'PYZ'),
+  ('struct',
+   'C:\\Users\\CAG '
+   'PRO\\PycharmProjects\\CAGBank_Main\\build\\QRCode_ThanhToan_Server\\localpycs\\struct.pyc',
+   'PYMODULE'),
+  ('pyimod01_archive',
+   'C:\\Users\\CAG '
+   'PRO\\PycharmProjects\\CAGBank_Main\\build\\QRCode_ThanhToan_Server\\localpycs\\pyimod01_archive.pyc',
+   'PYMODULE'),
+  ('pyimod02_importers',
+   'C:\\Users\\CAG '
+   'PRO\\PycharmProjects\\CAGBank_Main\\build\\QRCode_ThanhToan_Server\\localpycs\\pyimod02_importers.pyc',
+   'PYMODULE'),
+  ('pyimod03_ctypes',
+   'C:\\Users\\CAG '
+   'PRO\\PycharmProjects\\CAGBank_Main\\build\\QRCode_ThanhToan_Server\\localpycs\\pyimod03_ctypes.pyc',
+   'PYMODULE'),
+  ('pyimod04_pywin32',
+   'C:\\Users\\CAG '
+   'PRO\\PycharmProjects\\CAGBank_Main\\build\\QRCode_ThanhToan_Server\\localpycs\\pyimod04_pywin32.pyc',
+   'PYMODULE'),
+  ('pyiboot01_bootstrap',
+   'C:\\Users\\CAG '
+   'PRO\\PycharmProjects\\CAGBank_Main\\.venv\\Lib\\site-packages\\PyInstaller\\loader\\pyiboot01_bootstrap.py',
+   'PYSOURCE'),
+  ('pyi_rth_inspect',
+   'C:\\Users\\CAG '
+   'PRO\\PycharmProjects\\CAGBank_Main\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_inspect.py',
+   'PYSOURCE'),
+  ('QRCode_ThanhToan_Server',
+   'C:\\Users\\CAG '
+   'PRO\\PycharmProjects\\CAGBank_Main\\QRCode_ThanhToan_Server.py',
+   'PYSOURCE'),
+  ('python313.dll',
+   'C:\\Users\\CAG '
+   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\python313.dll',
+   'BINARY'),
+  ('unicodedata.pyd',
+   'C:\\Users\\CAG '
+   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\unicodedata.pyd',
+   'EXTENSION'),
+  ('_decimal.pyd',
+   'C:\\Users\\CAG '
+   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\_decimal.pyd',
+   'EXTENSION'),
+  ('_hashlib.pyd',
+   'C:\\Users\\CAG '
+   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\_hashlib.pyd',
+   'EXTENSION'),
+  ('select.pyd',
+   'C:\\Users\\CAG '
+   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\select.pyd',
+   'EXTENSION'),
+  ('_socket.pyd',
+   'C:\\Users\\CAG '
+   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\_socket.pyd',
+   'EXTENSION'),
+  ('_lzma.pyd',
+   'C:\\Users\\CAG '
+   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\_lzma.pyd',
+   'EXTENSION'),
+  ('_bz2.pyd',
+   'C:\\Users\\CAG '
+   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\_bz2.pyd',
+   'EXTENSION'),
+  ('_queue.pyd',
+   'C:\\Users\\CAG '
+   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\_queue.pyd',
+   'EXTENSION'),
+  ('_ssl.pyd',
+   'C:\\Users\\CAG '
+   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\_ssl.pyd',
+   'EXTENSION'),
+  ('charset_normalizer\\md__mypyc.cp313-win_amd64.pyd',
+   'C:\\Users\\CAG '
+   'PRO\\PycharmProjects\\CAGBank_Main\\.venv\\Lib\\site-packages\\charset_normalizer\\md__mypyc.cp313-win_amd64.pyd',
+   'EXTENSION'),
+  ('charset_normalizer\\md.cp313-win_amd64.pyd',
+   'C:\\Users\\CAG '
+   'PRO\\PycharmProjects\\CAGBank_Main\\.venv\\Lib\\site-packages\\charset_normalizer\\md.cp313-win_amd64.pyd',
+   'EXTENSION'),
+  ('VCRUNTIME140.dll',
+   'C:\\Users\\CAG '
+   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\VCRUNTIME140.dll',
+   'BINARY'),
+  ('libcrypto-3.dll',
+   'C:\\Users\\CAG '
+   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\libcrypto-3.dll',
+   'BINARY'),
+  ('libssl-3.dll',
+   'C:\\Users\\CAG '
+   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\libssl-3.dll',
+   'BINARY'),
+  ('certifi\\py.typed',
+   'C:\\Users\\CAG '
+   'PRO\\PycharmProjects\\CAGBank_Main\\.venv\\Lib\\site-packages\\certifi\\py.typed',
+   'DATA'),
+  ('certifi\\cacert.pem',
+   'C:\\Users\\CAG '
+   'PRO\\PycharmProjects\\CAGBank_Main\\.venv\\Lib\\site-packages\\certifi\\cacert.pem',
+   'DATA'),
+  ('base_library.zip',
+   'C:\\Users\\CAG '
+   'PRO\\PycharmProjects\\CAGBank_Main\\build\\QRCode_ThanhToan_Server\\base_library.zip',
+   'DATA')],
+ 'python313.dll',
+ False,
+ False,
+ False,
+ [],
+ None,
+ None,
+ None)
