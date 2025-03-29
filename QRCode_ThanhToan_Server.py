@@ -4,11 +4,16 @@ import time
 import json
 import os
 
+config_path = "data/config.json"
+file_path = "data/processed_transactions.json"
+
 def load_config():
-    with open("config.json", "r", encoding="utf-8") as file:
+    with open(config_path, "r", encoding="utf-8") as file:
         return json.load(file)
 
 config = load_config()
+
+
 
 ahk_file = config["ahk_file"]
 API_KEY = config["api_key"]
@@ -22,14 +27,14 @@ headers = {
 # Đọc tệp JSON để lấy các giao dịch đã xử lý trước đó
 def load_processed_transactions():
     try:
-        with open('processed_transactions.json', 'r', encoding='utf-8') as file:
+        with open(file_path, 'r', encoding='utf-8') as file:
             return json.load(file)
     except FileNotFoundError:
         return []
 
 # Lưu các giao dịch đã xử lý vào tệp JSON
 def save_processed_transactions(processed_transactions):
-    with open('processed_transactions.json', 'w', encoding='utf-8') as file:
+    with open(file_path, 'w', encoding='utf-8') as file:
         json.dump(processed_transactions, file, indent=4, ensure_ascii=False)
 
 # Gửi yêu cầu GET và lấy danh sách giao dịch
@@ -50,6 +55,7 @@ def get_transactions():
 
 # Chỉnh sửa file AHK và chạy AutoHotkey
 def execute_transaction(content, amount):
+    ahk_file = os.path.join("ahk", "CAGBank_NapTien_Gcafe.ahk")
     with open(ahk_file, "r", encoding="utf-8") as file:
         lines = file.readlines()
 

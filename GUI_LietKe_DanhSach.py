@@ -5,13 +5,16 @@ import json
 from pystray import MenuItem as item, Icon
 from PIL import Image, ImageDraw
 import threading
+import os
 import datetime
-
+import subprocess
 
 # Đường dẫn file JSON
-config_path = "config.json"
-file_path = "processed_transactions.json"
-txt_file = "daily_summary.txt"
+config_path = "data/config.json"
+file_path = "data/processed_transactions.json"
+txt_file = "data/daily_summary.txt"
+
+server_script = os.path.join(os.path.dirname(__file__), "QRCode_ThanhToan_Server.py")
 
 # Hàm đọc file JSON
 def read_json(file):
@@ -24,16 +27,6 @@ def read_json(file):
         print(f"Lỗi khi đọc file JSON {file}: {e}")
         return {}
 
-
-# Hàm ghi file JSON
-def write_json(file, data):
-    try:
-        with open(file, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=4)
-    except Exception as e:
-        print(f"Lỗi khi ghi file JSON {file}: {e}")
-
-
 # Đọc cấu hình
 config = read_json(config_path)
 
@@ -41,23 +34,45 @@ config = read_json(config_path)
 ahk_file = config.get("ahk_file", "CAGBank_NapTien_Gcafe.ahk")
 api_key = config.get("api_key", "your_api_key")
 api_url = config.get("api_url", "https://your_api_url")
+last_id = config.get("last_id", 0)
 
+# Hàm ghi file JSON
+def write_json(file_path, data):
+    with open(file_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4, ensure_ascii=False)  # Ghi file với định dạng đẹp
 
-# Hàm cập nhật dữ liệu
-def update_transactions():
-    transactions = read_json(file_path)
-
-    # Xóa dữ liệu cũ
+def clear_transactions():
+    """Xóa toàn bộ dữ liệu trong bảng giao diện."""
     for item in tree.get_children():
         tree.delete(item)
 
+    # Cập nhật nhãn tổng tiền về 0
+    total_label.config(text="Tổng Kết: 0 VND")
+
+# Hàm cập nhật dữ liệu
+def update_transactions():
+    global last_id
+    config = read_json(config_path)
+    last_id = config.get("last_id", 0)  # Cập nhật last_id mới nhất từ config
+
+    transactions = read_json(file_path)
+
+    # Xóa dữ liệu cũ
+    clear_transactions()
+
     total_amount = 0  # Tổng tiền
 
-    # Thêm dữ liệu mới
-    for idx, transaction in enumerate(transactions, 1):
+    # Lọc ra những giao dịch mới (ID > last_id)
+    new_transactions = [t for t in transactions if t.get("id", 0) > last_id]
+
+    # Sắp xếp danh sách theo ID tăng dần
+    new_transactions.sort(key=lambda x: x.get("id", 0))
+
+    # Thêm dữ liệu mới vào đầu bảng
+    for idx, transaction in enumerate(new_transactions, 1):
         name = transaction.get("content", "N/A")
         amount = transaction.get("amount", "0")
-        date = transaction.get("datetime", "N/A").replace("T", " ")  # Đổi T thành khoảng trắng
+        date = transaction.get("datetime", "N/A")  # Đổi T thành khoảng trắng
         status = transaction.get("status", "N/A")
 
         try:
@@ -65,32 +80,41 @@ def update_transactions():
         except ValueError:
             pass
 
-        tree.insert("", "end", values=(idx, name, f"{int(amount):,} VND", date, status))
+        # Chèn vào đầu danh sách thay vì cuối
+        tree.insert("", 0, values=(idx, name, f"{int(amount):,} VND", date, status))
 
     # Cập nhật tổng tiền
-    total_label.config(text=f"Tổng Tiền: {total_amount:,} VND")
+    total_label.config(text=f"Tổng Kết: {total_amount:,} VND")
 
     # Lên lịch cập nhật sau 2 giây
     root.after(2000, update_transactions)
 
-
-import datetime
-import json
-
-json_file = "processed_transactions.json"
-txt_file = "daily_summary.txt"
+def get_last_id():
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            transactions = json.load(f)
+        if not transactions:
+            return 0  # Trả về 0 nếu file rỗng
+        return transactions[-1].get("id", 0)  # Lấy ID của dòng cuối cùng
+    except (FileNotFoundError, json.JSONDecodeError):
+        return 0
 
 def write_to_txt():
-    """Ghi tổng hợp dữ liệu vào file TXT và xóa dữ liệu JSON mỗi ngày lúc 23:59:59"""
-
     # Đọc dữ liệu từ file JSON
-    transactions = read_json(json_file)
+    transactions = read_json(file_path)
+
+    # Đọc last_id từ config.json
+    config = read_json(config_path)
+    last_id = config.get("last_id", 0)
+
+    # Lọc ra các giao dịch có ID lớn hơn last_id
+    new_transactions = [t for t in transactions if t.get("id", 0) > last_id]
 
     # Tính tổng số lượt giao dịch
-    total_transactions = len(transactions)
+    total_transactions = len(new_transactions)
 
-    # Tính tổng số tiền (Đảm bảo chuyển về chuỗi trước khi kiểm tra)
-    total_amount = sum(int(t.get("amount", 0)) for t in transactions if str(t.get("amount", "0")).isdigit())
+    # Tính tổng số tiền (chỉ lấy số hợp lệ)
+    total_amount = sum(int(t.get("amount", 0)) for t in new_transactions if str(t.get("amount", "0")).isdigit())
 
     # Lấy ngày và thời gian hiện tại
     now = datetime.datetime.now()
@@ -103,35 +127,44 @@ def write_to_txt():
 
     print(f"Đã ghi {total_transactions} giao dịch, tổng tiền {total_amount:,} VND vào {txt_file}")
 
-    # Xóa toàn bộ dữ liệu trong file JSON
-    with open(json_file, "w", encoding="utf-8") as f:
-        json.dump([], f)
 
-    print(f"Đã xóa dữ liệu trong {json_file}")
+def tong_ket_doanh_thu():
+    # Hiển thị hộp thoại xác nhận
+    confirm = messagebox.askyesno("Xác nhận", "Sau khi tổng kết sẽ xoá hết lịch sử giao dịch!!!")
 
+    if confirm:
+        new_last_id = get_last_id()  # Lấy ID của giao dịch cuối cùng
+        write_to_txt() # Lưu tổng kết vào file TXT
+        update_config("last_id", new_last_id)  # Cập nhật last_id trong config
+        clear_transactions()  # Xóa dữ liệu hiển thị trên giao diện
+        messagebox.showinfo("Xác nhận", "Tổng kết doanh thu thành công!")
 
+        # Đọc lại giá trị last_id mới để đảm bảo dữ liệu hiển thị đúng
+        global last_id
+        last_id = new_last_id
+
+def update_config(key, value):
+    config_data = read_json(config_path)  # Đọc dữ liệu hiện có
+    config_data[key] = value  # Cập nhật giá trị mới
+    write_json(config_path, config_data)  # Ghi lại file mà không mất dữ liệu cũ
 
 # Hàm chỉnh sửa cấu hình
 def open_config_window():
     global ahk_file, api_key, api_url
 
     def change_CSM():
-        config_data = {"ahk_file": "CAGBank_NapTien_CSM.ahk", "api_key": api_key, "api_url": api_url}
-        write_json(config_path, config_data)
+        update_config("ahk_file", "CAGBank_NapTien_CSM.ahk")
         messagebox.showinfo("Thành công", f"Đã đổi sang CSM Billing")
         config_window.deiconify()
 
-
     def change_FNet():
-        config_data = {"ahk_file": "CAGBank_NapTien_FNet.ahk", "api_key": api_key, "api_url": api_url}
-        write_json(config_path, config_data)
-        messagebox.showinfo("Thành công", "Đã đổi sang CSM Billing")
+        update_config("ahk_file", "CAGBank_NapTien_FNet.ahk")
+        messagebox.showinfo("Thành công", "Đã đổi sang FNet Billing")
         config_window.deiconify()
 
 
     def change_Gcafe():
-        config_data = {"ahk_file": "CAGBank_NapTien_Gcafe.ahk", "api_key": api_key, "api_url": api_url}
-        write_json(config_path, config_data)
+        update_config("ahk_file", "CAGBank_NapTien_Gcafe.ahk")
         messagebox.showinfo("Thành công", f"Đã đổi sang Gcafe Billing")
         config_window.deiconify()
 
@@ -158,11 +191,6 @@ def open_config_window():
         """Ẩn cửa sổ chính thay vì đóng hẳn ứng dụng"""
         root.withdraw()
 
-    def exit_app(icon, item):
-        """Thoát hoàn toàn ứng dụng"""
-        icon.stop()  # Dừng System Tray
-        root.quit()
-
     config_window = tk.Toplevel(root)
     config_window.title("Cấu hình")
     config_window.geometry("350x200")
@@ -183,7 +211,7 @@ def open_config_window():
 
     tk.Button(button_frame, text="CSM Billing", command=change_CSM).pack(side="left", expand=True, padx=5, pady=5)
     tk.Button(button_frame, text="FNet Billing", command=change_FNet).pack(side="left", expand=True, padx=5, pady=5)
-    tk.Button(button_frame, text="Gcafe Billing", command=change_Gcafe).pack(side="left", expand=False, padx=5, pady=5)
+    tk.Button(button_frame, text="Gcafe Billing", command=change_Gcafe).pack(side="left", expand=True, padx=5, pady=5)
 
     tk.Label(config_window, text="API Key:").pack()
     api_entry = tk.Entry(config_window, width=40)
@@ -201,53 +229,55 @@ def open_config_window():
     tk.Button(apply_button_frame, text="Hủy", command=cancel_config).pack(side="left", expand=True, padx=5)
     tk.Button(apply_button_frame, text="Lưu", command=save_config).pack(padx=5)
 
-
 # Hàm ẩn cửa sổ chính
 def hide_window():
     root.withdraw()
 
-
 # Hàm hiện lại cửa sổ chính
 def show_window(icon, item):
-    root.deiconify()
-
+    root.deiconify()  # Hiện cửa sổ chính
+    root.lift()  # Đưa cửa sổ lên trên
+    root.attributes("-topmost", True)  # Đảm bảo cửa sổ trên cùng
 
 # Hàm thoát ứng dụng
 def exit_app(icon, item):
     icon.stop()  # Dừng System Tray
     root.quit()
 
-
 # Tạo biểu tượng trong System Tray
 def create_tray_icon():
-    image = Image.new("RGB", (64, 64), (0, 0, 0))
-    draw = ImageDraw.Draw(image)
-    draw.rectangle((0, 0, 64, 64), fill="blue")
+    image = Image.open("data/CAGPRO.ico")
 
     menu = (item("Hiện cửa sổ", show_window), item("Thoát", exit_app))
 
     icon = Icon("app_icon", image, menu=menu)
-    root.iconify()
     icon.run()
 
+def insert_transaction_ui(name, amount, date, status):
+    tree.insert("", "end", values=("*", name, f"{int(amount):,} VND", date, status))
+
+def on_closing():
+    """Ẩn cửa sổ chính thay vì đóng hẳn ứng dụng"""
+    root.withdraw()
 
 # Giao diện chính
 root = tk.Tk()
 root.title("Danh Sách Giao Dịch")
 root.geometry("600x400")
+root.iconbitmap("data/CAGPRO.ico")
 
 main_button_frame = tk.Frame(root)
-main_button_frame.pack(pady=5)
+main_button_frame.pack(anchor="nw", padx=5, pady=5)
 
 # Nút mở cấu hình
 settings_button = tk.Button(main_button_frame, text="⚙ Cấu Hình", command=open_config_window)
-summary_button = tk.Button(main_button_frame, text="Tổng kết doanh thu", command=write_to_txt)
+summary_button = tk.Button(main_button_frame, text="Tổng kết doanh thu", command=tong_ket_doanh_thu)
 settings_button.pack(side="left", expand=True, padx=5)
 summary_button.pack(side="left", expand=True, padx=5)
 
 # Treeview
 tree = ttk.Treeview(root, columns=("STT", "Tài khoản", "Số Tiền", "Ngày", "Trạng Thái"), show="headings")
-tree.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
+tree.pack(padx=10, pady=2, fill=tk.BOTH, expand=True)
 
 # Cấu hình cột
 tree.heading("STT", text="STT")
@@ -269,11 +299,13 @@ total_label.pack(pady=5, side="right", padx=5)
 # Gọi hàm cập nhật dữ liệu
 update_transactions()
 
+# Chạy file QRCode_ThanhToan_Server.py trong nền
+subprocess.Popen(["python", server_script], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
 # Chạy System Tray trong luồng khác để không chặn giao diện
 threading.Thread(target=create_tray_icon, daemon=True).start()
 
-# Ẩn cửa sổ khi chạy
-root.withdraw()
+root.protocol("WM_DELETE_WINDOW", on_closing)
 
 # Chạy ứng dụng
 root.mainloop()
