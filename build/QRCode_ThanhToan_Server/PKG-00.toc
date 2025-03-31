@@ -1,5 +1,5 @@
 ('C:\\Users\\CAG '
- 'PRO\\PycharmProjects\\CAGBank_Main\\build\\QRCode_ThanhToan_Server\\QRCode_ThanhToan_Server.pkg',
+ 'PRO\\Desktop\\CAGBank_ThanhToan_Server\\build\\QRCode_ThanhToan_Server\\QRCode_ThanhToan_Server.pkg',
  {'BINARY': True,
   'DATA': True,
   'EXECUTABLE': True,
@@ -12,27 +12,27 @@
  [('pyi-contents-directory _internal', '', 'OPTION'),
   ('PYZ-00.pyz',
    'C:\\Users\\CAG '
-   'PRO\\PycharmProjects\\CAGBank_Main\\build\\QRCode_ThanhToan_Server\\PYZ-00.pyz',
+   'PRO\\Desktop\\CAGBank_ThanhToan_Server\\build\\QRCode_ThanhToan_Server\\PYZ-00.pyz',
    'PYZ'),
   ('struct',
    'C:\\Users\\CAG '
-   'PRO\\PycharmProjects\\CAGBank_Main\\build\\QRCode_ThanhToan_Server\\localpycs\\struct.pyc',
+   'PRO\\Desktop\\CAGBank_ThanhToan_Server\\build\\QRCode_ThanhToan_Server\\localpycs\\struct.pyc',
    'PYMODULE'),
   ('pyimod01_archive',
    'C:\\Users\\CAG '
-   'PRO\\PycharmProjects\\CAGBank_Main\\build\\QRCode_ThanhToan_Server\\localpycs\\pyimod01_archive.pyc',
+   'PRO\\Desktop\\CAGBank_ThanhToan_Server\\build\\QRCode_ThanhToan_Server\\localpycs\\pyimod01_archive.pyc',
    'PYMODULE'),
   ('pyimod02_importers',
    'C:\\Users\\CAG '
-   'PRO\\PycharmProjects\\CAGBank_Main\\build\\QRCode_ThanhToan_Server\\localpycs\\pyimod02_importers.pyc',
+   'PRO\\Desktop\\CAGBank_ThanhToan_Server\\build\\QRCode_ThanhToan_Server\\localpycs\\pyimod02_importers.pyc',
    'PYMODULE'),
   ('pyimod03_ctypes',
    'C:\\Users\\CAG '
-   'PRO\\PycharmProjects\\CAGBank_Main\\build\\QRCode_ThanhToan_Server\\localpycs\\pyimod03_ctypes.pyc',
+   'PRO\\Desktop\\CAGBank_ThanhToan_Server\\build\\QRCode_ThanhToan_Server\\localpycs\\pyimod03_ctypes.pyc',
    'PYMODULE'),
   ('pyimod04_pywin32',
    'C:\\Users\\CAG '
-   'PRO\\PycharmProjects\\CAGBank_Main\\build\\QRCode_ThanhToan_Server\\localpycs\\pyimod04_pywin32.pyc',
+   'PRO\\Desktop\\CAGBank_ThanhToan_Server\\build\\QRCode_ThanhToan_Server\\localpycs\\pyimod04_pywin32.pyc',
    'PYMODULE'),
   ('pyiboot01_bootstrap',
    'C:\\Users\\CAG '
@@ -44,7 +44,7 @@
    'PYSOURCE'),
   ('QRCode_ThanhToan_Server',
    'C:\\Users\\CAG '
-   'PRO\\PycharmProjects\\CAGBank_Main\\QRCode_ThanhToan_Server.py',
+   'PRO\\Desktop\\CAGBank_ThanhToan_Server\\QRCode_ThanhToan_Server.py',
    'PYSOURCE'),
   ('python313.dll',
    'C:\\Users\\CAG '
@@ -106,17 +106,17 @@
    'C:\\Users\\CAG '
    'PRO\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\libssl-3.dll',
    'BINARY'),
-  ('certifi\\py.typed',
-   'C:\\Users\\CAG '
-   'PRO\\PycharmProjects\\CAGBank_Main\\.venv\\Lib\\site-packages\\certifi\\py.typed',
-   'DATA'),
   ('certifi\\cacert.pem',
    'C:\\Users\\CAG '
    'PRO\\PycharmProjects\\CAGBank_Main\\.venv\\Lib\\site-packages\\certifi\\cacert.pem',
    'DATA'),
+  ('certifi\\py.typed',
+   'C:\\Users\\CAG '
+   'PRO\\PycharmProjects\\CAGBank_Main\\.venv\\Lib\\site-packages\\certifi\\py.typed',
+   'DATA'),
   ('base_library.zip',
    'C:\\Users\\CAG '
-   'PRO\\PycharmProjects\\CAGBank_Main\\build\\QRCode_ThanhToan_Server\\base_library.zip',
+   'PRO\\Desktop\\CAGBank_ThanhToan_Server\\build\\QRCode_ThanhToan_Server\\base_library.zip',
    'DATA')],
  'python313.dll',
  False,

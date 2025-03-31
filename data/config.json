@@ -1,6 +1,8 @@
 {
+    "bank_number": "19745371",
+    "password": "HoangTien.1505",
     "ahk_file": "CAGBank_NapTien_Gcafe.ahk",
-    "api_key": "AK_CS.6507d3700ab711f097089522635f3f80.1gLQbfnm3eO9TqwMfBVgGkUVeIwqKBqbroCyXAjoN53uuHZ6yQ6Ezfq7mf9AUnYDdZ2ASgxZ",
-    "api_url": "https://oauth.casso.vn/v2/transactions?fromDate=2025-03-28&page=1&pageSize=3000&sort=ASC",
-    "last_id": 10140013
+    "token": "A50D7A29-CEEC-4F52-6209-209F6F70DBFB",
+    "api_url": "https://api.web2m.com/historyapiacbv3/",
+    "last_id": 2548
 }

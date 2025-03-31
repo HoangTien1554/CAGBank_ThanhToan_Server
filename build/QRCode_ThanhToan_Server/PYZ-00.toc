@@ -1,5 +1,5 @@
 ('C:\\Users\\CAG '
- 'PRO\\PycharmProjects\\CAGBank_Main\\build\\QRCode_ThanhToan_Server\\PYZ-00.pyz',
+ 'PRO\\Desktop\\CAGBank_ThanhToan_Server\\build\\QRCode_ThanhToan_Server\\PYZ-00.pyz',
  [('__future__',
    'C:\\Users\\CAG '
    'PRO\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\__future__.py',

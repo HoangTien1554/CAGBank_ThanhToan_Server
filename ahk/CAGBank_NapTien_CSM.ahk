@@ -2,8 +2,10 @@
 
 TaiKhoan := "tien"
 SoTien := 10000
-BlockInput, On  ;
+
 WinActivate, Cyber Station Manager - [ Nhan vien: ADMIN (Admin) ] ;
+BlockInput, On  ;
+DllCall("ShowCursor", "Int", 0)  ;
 WinWaitActive, Cyber Station Manager - [ Nhan vien: ADMIN (Admin) ] ;
 CoordMode, Mouse, Screen  ;
 Sleep, 100 ;
@@ -31,5 +33,6 @@ Click, 960, 560 ;
 Sleep, 100 ;
 Click, 910, 730 ;
 Sleep, 100 ;
+DllCall("ShowCursor", "Int", 1)  ;
 BlockInput, Off  ;
 ExitApp

@@ -1,5 +1,5 @@
 ('C:\\Users\\CAG '
- 'PRO\\PycharmProjects\\CAGBank_Main\\build\\GUI_LietKe_DanhSach\\PYZ-00.pyz',
+ 'PRO\\Desktop\\CAGBank_ThanhToan_Server\\build\\GUI_LietKe_DanhSach\\PYZ-00.pyz',
  [('PIL',
    'C:\\Users\\CAG '
    'PRO\\PycharmProjects\\CAGBank_Main\\.venv\\Lib\\site-packages\\PIL\\__init__.py',
@@ -1212,6 +1212,18 @@
   ('pprint',
    'C:\\Users\\CAG '
    'PRO\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\pprint.py',
+   'PYMODULE'),
+  ('psutil',
+   'C:\\Users\\CAG '
+   'PRO\\PycharmProjects\\CAGBank_Main\\.venv\\Lib\\site-packages\\psutil\\__init__.py',
+   'PYMODULE'),
+  ('psutil._common',
+   'C:\\Users\\CAG '
+   'PRO\\PycharmProjects\\CAGBank_Main\\.venv\\Lib\\site-packages\\psutil\\_common.py',
+   'PYMODULE'),
+  ('psutil._pswindows',
+   'C:\\Users\\CAG '
+   'PRO\\PycharmProjects\\CAGBank_Main\\.venv\\Lib\\site-packages\\psutil\\_pswindows.py',
    'PYMODULE'),
   ('py_compile',
    'C:\\Users\\CAG '

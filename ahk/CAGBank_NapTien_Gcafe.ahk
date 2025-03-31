@@ -1,33 +1,40 @@
 ﻿SetTitleMatchMode, 2  ;
 
-TaiKhoan := "nhat11"
-SoTien := 5000
+TaiKhoan := "8995"
+SoTien := 2000
+
 BlockInput, On  ;
 WinActivate, GCafe+ server 1.7.45 [ADMIN (Điều hành)] ;
-WinWaitActive, GCafe+ server 1.7.45 [ADMIN (Điều hành)] ;
+Loop
+{
+    Send, {Esc}
+    Sleep, 100  ; Đợi 100ms giữa mỗi lần bấm
+    if WinActive("GCafe+ server 1.7.45 [ADMIN (Điều hành)]")
+        break  ; Thoát vòng lặp nếu cửa sổ đã active
+}
 CoordMode, Mouse, Screen  ;
-Sleep, 150 ;
+Sleep, 100 ;
 Click, 131, 100 ;
-Sleep, 150 ;
+Sleep, 100 ;
 Click, 368, 135 ;
 Sleep, 50 ;
 Send, ^a
 Sleep, 50 ;
 Send, %TaiKhoan% ;
-Sleep, 150 ;
+Sleep, 50 ;
 SendInput, {Enter} ;
-Sleep, 150 ;
+Sleep, 100 ;
 Click, 58, 188 ;
-Sleep, 150 ;
+Sleep, 100 ;
 Click, 58, 188 ;
-Sleep, 150 ;
+Sleep, 100 ;
 Click, 1310, 510 ;
-Sleep, 150 ;
+Sleep, 100 ;
 Send, %SoTien% ;
-Sleep, 150 ;
-Click, 913, 617 ;
-Sleep, 150 ;
-Click, 914, 767 ;
-Sleep, 150 ;
+Sleep, 50 ;
+SendInput, {Enter} ;
+Sleep, 50 ;
+SendInput, {Enter} ;
+Sleep, 50 ;
 BlockInput, Off  ;
 ExitApp

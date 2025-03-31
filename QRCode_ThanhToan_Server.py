@@ -7,49 +7,66 @@ import os
 config_path = "data/config.json"
 file_path = "data/processed_transactions.json"
 
+
 def load_config():
     with open(config_path, "r", encoding="utf-8") as file:
         return json.load(file)
 
+
 config = load_config()
 
+bank_number = config["bank_number"]
+password = config["password"]
 ahk_file = config["ahk_file"]
-API_KEY = config["api_key"]
-URL = config["api_url"]
+token = config["token"]
+URL = f"{config['api_url']}/{password}/{bank_number}/{token}"
 
-# Headers (sử dụng API Key)
-headers = {
-    "Authorization": f"Apikey {API_KEY}"
-}
 
-# Đọc tệp JSON để lấy các giao dịch đã xử lý trước đó
-def load_processed_transactions():
+# Lưu danh sách giao dịch vào file JSON
+def save_transactions(transactions):
+    with open(file_path, 'w', encoding='utf-8') as file:
+        json.dump(transactions, file, indent=4, ensure_ascii=False)
+
+
+# Đọc danh sách giao dịch từ file JSON
+def load_transactions():
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
             return json.load(file)
     except FileNotFoundError:
         return []
 
-# Lưu các giao dịch đã xử lý vào tệp JSON
-def save_processed_transactions(processed_transactions):
-    with open(file_path, 'w', encoding='utf-8') as file:
-        json.dump(processed_transactions, file, indent=4, ensure_ascii=False)
 
 # Gửi yêu cầu GET và lấy danh sách giao dịch
-def get_transactions():
-    response = requests.get(URL, headers=headers)
+def fetch_and_save_transactions():
+    response = requests.get(URL)
 
     if response.status_code == 200:
         data = response.json()
-        transactions = data.get("data", {}).get("records", [])
+        transactions = data.get("transactions", [])
+        existing_transactions = load_transactions()
+        existing_ids = {t["transactionID"] for t in existing_transactions}
 
-        # Chỉ lấy giao dịch tiền vào (amount > 0)
-        incoming_transactions = [t for t in transactions if t["amount"] > 0]
+        # Chỉ lấy giao dịch tiền vào (type == "IN") và gán status "Chưa nạp tiền"
+        new_transactions = [
+            {
+                "transactionID": t["transactionID"],
+                "content": re.search(r'([a-z0-9\s]+)(?=\s*\d{6,}|\s*QR\s*|\s*GD|\s*$)',
+                                     t["description"]).group().strip() if re.search(
+                    r'([a-z0-9\s]+)(?=\s*\d{6,}|\s*QR\s*|\s*GD|\s*$)', t["description"]) else "",
+                "datetime": t["transactionDate"],
+                "amount": t["amount"],
+                "status": "Chưa nạp tiền"
+            }
+            for t in transactions if t["type"] == "IN" and t["transactionID"] not in existing_ids
+        ]
 
-        return incoming_transactions
+        if new_transactions:
+            existing_transactions.extend(new_transactions)
+            save_transactions(existing_transactions)
     else:
         print(f"Lỗi API: {response.status_code} - {response.text}")
-        return []
+
 
 # Chỉnh sửa file AHK và chạy AutoHotkey
 def execute_transaction(content, amount):
@@ -72,53 +89,26 @@ def execute_transaction(content, amount):
     # Mở file .ahk để thực hiện giao dịch
     os.startfile(ahk_run)
 
-# Danh sách các giao dịch đã xử lý
-processed_transactions = load_processed_transactions()
 
 # Lặp vô hạn để kiểm tra API mỗi 31 giây
 while True:
-    records = get_transactions()
-    new_transactions = []
+    # Lấy dữ liệu từ API và lưu vào file JSON
+    fetch_and_save_transactions()
 
-    if records:
-        for transaction in records:
-            transaction_id = transaction.get("id")
-            description = transaction.get("description", "")
-            amount = transaction.get("amount", "N/A")
-            date = transaction.get("when", "").replace("T", " - ")
+    # Đọc danh sách giao dịch từ file JSON
+    transactions = load_transactions()
 
-            # Kiểm tra xem giao dịch đã có trong danh sách chưa
-            existing_transaction = next((t for t in processed_transactions if t["id"] == transaction_id), None)
-
-            if not existing_transaction:
-                match = re.search(r'([a-z0-9\s]+)(?=\s*\d{6,}|\s*QR\s*|\s*GD|\s*$)', description)
-                if match:
-                    content = match.group().strip()
-
-                    new_transaction = {
-                        "id": transaction_id,
-                        "content": content,
-                        "datetime": date,
-                        "amount": amount,
-                        "status": "Chưa nạp tiền"  # Chưa thực hiện
-                    }
-                    new_transactions.append(new_transaction)
-                    processed_transactions.append(new_transaction)
-
-        # Lưu lại danh sách giao dịch đã cập nhật
-        save_processed_transactions(processed_transactions)
-
-    # Thực hiện giao dịch có status rỗng, mỗi 3 giây
-    pending_transactions = [t for t in processed_transactions if t["status"] == "Chưa nạp tiền"]
+    # Lọc ra giao dịch có status "Chưa nạp tiền"
+    pending_transactions = [t for t in transactions if t["status"] == "Chưa nạp tiền"]
 
     for transaction in pending_transactions:
         execute_transaction(transaction["content"], transaction["amount"])
 
         # Cập nhật trạng thái thành "Đã nạp tiền"
         transaction["status"] = "Đã nạp tiền"
-        save_processed_transactions(processed_transactions)
+        save_transactions(transactions)
 
-        time.sleep(3.5)  # Chờ 3 giây trước khi thực hiện giao dịch tiếp theo
+        time.sleep(3)  # Chờ 3 giây trước khi thực hiện giao dịch tiếp theo
 
     # Đợi 31 giây trước khi kiểm tra API tiếp
-    time.sleep(31)
+    time.sleep(3)

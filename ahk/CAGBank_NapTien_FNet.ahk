@@ -1,7 +1,7 @@
 ﻿SetTitleMatchMode, 2  ;
 
-TaiKhoan := "tien"
-SoTien := 100000
+TaiKhoan := "luu"
+SoTien := 2000
 BlockInput, On  ;
 WinActivate, FNet - [ Nhan vien: ADMIN (Admin) ] ;
 WinWaitActive, FNet - [ Nhan vien: ADMIN (Admin) ] ;

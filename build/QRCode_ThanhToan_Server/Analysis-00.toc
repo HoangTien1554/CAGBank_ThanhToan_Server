@@ -1,6 +1,6 @@
 (['C:\\Users\\CAG '
-  'PRO\\PycharmProjects\\CAGBank_Main\\QRCode_ThanhToan_Server.py'],
- ['C:\\Users\\CAG PRO\\PycharmProjects\\CAGBank_Main'],
+  'PRO\\Desktop\\CAGBank_ThanhToan_Server\\QRCode_ThanhToan_Server.py'],
+ ['C:\\Users\\CAG PRO\\Desktop\\CAGBank_ThanhToan_Server'],
  [],
  [('C:\\Users\\CAG '
    'PRO\\PycharmProjects\\CAGBank_Main\\.venv\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks',
@@ -24,7 +24,7 @@
    'PYSOURCE'),
   ('QRCode_ThanhToan_Server',
    'C:\\Users\\CAG '
-   'PRO\\PycharmProjects\\CAGBank_Main\\QRCode_ThanhToan_Server.py',
+   'PRO\\Desktop\\CAGBank_ThanhToan_Server\\QRCode_ThanhToan_Server.py',
    'PYSOURCE')],
  [('zipfile',
    'C:\\Users\\CAG '
@@ -438,21 +438,21 @@
    'C:\\Users\\CAG '
    'PRO\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\ast.py',
    'PYMODULE'),
-  ('tracemalloc',
-   'C:\\Users\\CAG '
-   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\tracemalloc.py',
-   'PYMODULE'),
   ('_colorize',
    'C:\\Users\\CAG '
    'PRO\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\_colorize.py',
+   'PYMODULE'),
+  ('_py_abc',
+   'C:\\Users\\CAG '
+   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\_py_abc.py',
    'PYMODULE'),
   ('stringprep',
    'C:\\Users\\CAG '
    'PRO\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\stringprep.py',
    'PYMODULE'),
-  ('_py_abc',
+  ('tracemalloc',
    'C:\\Users\\CAG '
-   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\_py_abc.py',
+   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\tracemalloc.py',
    'PYMODULE'),
   ('subprocess',
    'C:\\Users\\CAG '
@@ -880,15 +880,15 @@
    'BINARY')],
  [],
  [],
- [('certifi\\py.typed',
-   'C:\\Users\\CAG '
-   'PRO\\PycharmProjects\\CAGBank_Main\\.venv\\Lib\\site-packages\\certifi\\py.typed',
-   'DATA'),
-  ('certifi\\cacert.pem',
+ [('certifi\\cacert.pem',
    'C:\\Users\\CAG '
    'PRO\\PycharmProjects\\CAGBank_Main\\.venv\\Lib\\site-packages\\certifi\\cacert.pem',
    'DATA'),
+  ('certifi\\py.typed',
+   'C:\\Users\\CAG '
+   'PRO\\PycharmProjects\\CAGBank_Main\\.venv\\Lib\\site-packages\\certifi\\py.typed',
+   'DATA'),
   ('base_library.zip',
    'C:\\Users\\CAG '
-   'PRO\\PycharmProjects\\CAGBank_Main\\build\\QRCode_ThanhToan_Server\\base_library.zip',
+   'PRO\\Desktop\\CAGBank_ThanhToan_Server\\build\\QRCode_ThanhToan_Server\\base_library.zip',
    'DATA')])
