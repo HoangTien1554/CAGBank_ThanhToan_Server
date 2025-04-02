@@ -9,11 +9,14 @@ config_path = "data/config.json"
 file_path = "data/processed_transactions.json"
 
 
-def load_config():
-    with open(config_path, "r", encoding="utf-8") as file:
-        return json.load(file)
+def load_config(file_path):
+    try:
+        with open(file_path, "r", encoding="utf-8") as file:
+            return json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
 
-config = load_config()
+config = load_config(config_path)
 
 last_id = config["last_id"]
 bank_number = config["bank_number"]
@@ -75,9 +78,16 @@ def fetch_and_save_transactions():
             for t in transactions if t["type"] == "IN" and t["id"] not in existing_ids and t["id"] > last_id
         ]
 
+        # Cập nhật last_id nếu cần
+        max_new_id = max(t["id"] for t in transactions)
+        if config["last_id"] == 0:
+            update_config("last_id", max_new_id)
+
         if new_transactions:
             existing_transactions.extend(new_transactions)
             save_transactions(existing_transactions)
+
+
     else:
         print(f"Lỗi API: {response.status_code} - {response.text}")
 
@@ -108,9 +118,9 @@ def write_json(path, data):
         json.dump(data, file, indent=4, ensure_ascii=False)
 
 def update_config(key, value):
-    config = load_config(config_path)
+    config = load_config("data/config.json")
     config[key] = value
-    write_json(config_path, config)
+    write_json("data/config.json", config)
 
 # Lặp vô hạn để kiểm tra API mỗi 31 giây
 while True:
@@ -133,4 +143,4 @@ while True:
         time.sleep(3)  # Chờ 3 giây trước khi thực hiện giao dịch tiếp theo
 
     # Đợi 2 giây trước khi kiểm tra API tiếp
-    time.sleep(3)
+    time.sleep(2)

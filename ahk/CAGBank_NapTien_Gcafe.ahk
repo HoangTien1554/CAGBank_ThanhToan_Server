@@ -1,15 +1,16 @@
 ﻿SetTitleMatchMode, 2  ;
 
-TaiKhoan := "mduc"
-SoTien := 50000
+TaiKhoan := "ngocvu"
+SoTien := 20000
 
 BlockInput, On  ;
-WinActivate, GCafe+ server 1.7.45 [ADMIN (Điều hành)] ;
+SetTitleMatchMode, 2  ; Cho phép tìm kiếm tiêu đề chứa chuỗi con
+WinActivate, GCafe+ server 1.7.45
 Loop
 {
     Send, {Esc}
     Sleep, 100  ; Đợi 100ms giữa mỗi lần bấm
-    if WinActive("GCafe+ server 1.7.45 [ADMIN (Điều hành)]")
+    if WinActive("GCafe+ server 1.7.45")
         break  ; Thoát vòng lặp nếu cửa sổ đã active
 }
 CoordMode, Mouse, Screen  ;
