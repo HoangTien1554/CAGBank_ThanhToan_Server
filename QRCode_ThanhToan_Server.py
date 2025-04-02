@@ -83,6 +83,8 @@ def fetch_and_save_transactions():
         if config["last_id"] == 0:
             update_config("last_id", max_new_id)
 
+
+
         if new_transactions:
             existing_transactions.extend(new_transactions)
             save_transactions(existing_transactions)
@@ -90,6 +92,7 @@ def fetch_and_save_transactions():
 
     else:
         print(f"Lỗi API: {response.status_code} - {response.text}")
+
 
 
 # Chỉnh sửa file AHK và chạy AutoHotkey
@@ -127,11 +130,14 @@ while True:
     # Lấy dữ liệu từ API và lưu vào file JSON
     fetch_and_save_transactions()
 
+    config = load_config(config_path)
+    last_id = config["last_id"]
+
     # Đọc danh sách giao dịch từ file JSON
     transactions = load_transactions()
 
     # Lọc ra giao dịch có status "Chưa nạp tiền"
-    pending_transactions = [t for t in transactions if t["status"] == "Chưa nạp tiền"]
+    pending_transactions = [t for t in transactions if t["status"] == "Chưa nạp tiền" and t["id"] > last_id]
 
     for transaction in pending_transactions:
         execute_transaction(transaction["content"], transaction["amount"])
@@ -143,4 +149,4 @@ while True:
         time.sleep(3)  # Chờ 3 giây trước khi thực hiện giao dịch tiếp theo
 
     # Đợi 2 giây trước khi kiểm tra API tiếp
-    time.sleep(2)
+    time.sleep(3.5)

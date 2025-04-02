@@ -1,7 +1,7 @@
 ﻿SetTitleMatchMode, 2  ;
 
-TaiKhoan := "ngocvu"
-SoTien := 20000
+TaiKhoan := "nam001"
+SoTien := 3348
 
 BlockInput, On  ;
 SetTitleMatchMode, 2  ; Cho phép tìm kiếm tiêu đề chứa chuỗi con
