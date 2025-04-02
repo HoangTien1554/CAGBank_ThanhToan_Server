@@ -1,7 +1,7 @@
 ﻿SetTitleMatchMode, 2  ;
 
-TaiKhoan := "8995"
-SoTien := 2000
+TaiKhoan := "mduc"
+SoTien := 50000
 
 BlockInput, On  ;
 WinActivate, GCafe+ server 1.7.45 [ADMIN (Điều hành)] ;

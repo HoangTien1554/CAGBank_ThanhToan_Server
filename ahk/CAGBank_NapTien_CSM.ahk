@@ -1,7 +1,7 @@
 ﻿SetTitleMatchMode, 2  ;
 
-TaiKhoan := "tien"
-SoTien := 10000
+TaiKhoan := "luu"
+SoTien := 2000
 
 WinActivate, Cyber Station Manager - [ Nhan vien: ADMIN (Admin) ] ;
 BlockInput, On  ;

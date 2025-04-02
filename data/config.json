@@ -1,8 +1,7 @@
 {
-    "bank_number": "19745371",
-    "password": "HoangTien.1505",
+    "last_id": 1789758,
     "ahk_file": "CAGBank_NapTien_Gcafe.ahk",
-    "token": "A50D7A29-CEEC-4F52-6209-209F6F70DBFB",
-    "api_url": "https://api.web2m.com/historyapiacbv3/",
-    "last_id": 2548
+    "api_url": "https://my.pay2s.vn/userapi/transactions",
+    "bank_number": "19745371",
+    "token": "76030f80652559028160acbcae6fb0039585d4ed3604faec742731478a4d7526"
 }

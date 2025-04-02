@@ -4,12 +4,16 @@ import subprocess
 import psutil
 from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QLabel, QVBoxLayout, QWidget, QTableWidget, \
     QSystemTrayIcon, QMenu, QDialog, QLineEdit, QHBoxLayout, QPushButton, QHeaderView, QTableWidgetItem, QMessageBox
-from PyQt5.QtGui import QIcon, QFont
+from PyQt5.QtGui import QIcon, QFont, QPixmap
 from PyQt5.QtCore import Qt, QSharedMemory, QTimer
 import datetime
 import pyautogui
+import requests
 
 width, height = pyautogui.size()
+
+url_check = "https://autobank.cagpro.cloud/ver.php"
+qr_addr = "QRCode_ThanhToan_Server.exe"
 
 qr_process = None
 
@@ -18,11 +22,22 @@ shared_memory = QSharedMemory("TestUI_Unique_Instance")
 if not shared_memory.create(1):  # Nếu ứng dụng đã chạy
     sys.exit()
 
+# Hàm kiểm tra xem trang web có tồn tại hay không
+def check_website(url):
+    try:
+        response = requests.get(url)
+        # Kiểm tra nếu mã trạng thái là 200 và nội dung trang chứa chuỗi cần tìm
+        if response.status_code == 200 and "Auto Bank Ver 1.0.0.0" in response.text:
+            return True
+        else:
+            return False
+    except requests.exceptions.RequestException:
+        return False
+
 def update_config(key, value):
     config = load_config("data/config.json")
     config[key] = value
     write_json("data/config.json", config)
-
 
 def write_json(path, data):
     with open(path, "w", encoding="utf-8") as file:
@@ -41,7 +56,7 @@ def load_transactions(file_path, last_id):
     try:
         with open(file_path, "r", encoding="utf-8") as file:
             transactions = json.load(file)
-            return [t for t in transactions if t["transactionID"] > last_id][::-1]  # Lọc và đảo ngược danh sách
+            return [t for t in transactions if t["id"] > last_id][::-1]  # Lọc và đảo ngược danh sách
     except (FileNotFoundError, json.JSONDecodeError):
         return []
 
@@ -61,18 +76,20 @@ def stop_qr_code_server():
         if proc.info['name'] == "QRCode_ThanhToan_Server.exe":
             proc.terminate()
 
+def restart_qr_code_server():
+    stop_qr_code_server()
+    start_qr_code_server()
 
 class ConfigWindow(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Cấu hình")
-        self.setGeometry(200, 200, 350, 320)
+        self.setGeometry(200, 200, 350, 200)
         self.setWindowModality(Qt.ApplicationModal)
 
         config = load_config("data/config.json")
         self.ahk_file = config.get("ahk_file", "")
         self.token = config.get("token", "")
-        self.api_url = config.get("api_url", "")
         self.bank_number = config.get("bank_number", "")
         self.password = config.get("password", "")
 
@@ -95,19 +112,19 @@ class ConfigWindow(QDialog):
 
         layout.addLayout(button_layout)
 
-        layout.addWidget(QLabel("API URL:"))
-        self.url_entry = QLineEdit(self.api_url)
-        layout.addWidget(self.url_entry)
+        self.buttons = {
+            "CAGBank_NapTien_CSM.ahk": self.csm_button,
+            "CAGBank_NapTien_FNet.ahk": self.fnet_button,
+            "CAGBank_NapTien_Gcafe.ahk": self.gcafe_button
+        }
+        # Cập nhật trạng thái focus ban đầu
+        self.update_button_focus()
 
         layout.addWidget(QLabel("Số tài khoản:"))
         self.bank_entry = QLineEdit(str(self.bank_number))
         layout.addWidget(self.bank_entry)
 
-        layout.addWidget(QLabel("Mật khẩu:"))
-        self.password_entry = QLineEdit(self.password)
-        layout.addWidget(self.password_entry)
-
-        layout.addWidget(QLabel("TOKEN:"))
+        layout.addWidget(QLabel("Secret Key:"))
         self.token_entry = QLineEdit(self.token)
         layout.addWidget(self.token_entry)
 
@@ -124,9 +141,22 @@ class ConfigWindow(QDialog):
         layout.addLayout(button_layout)
         self.setLayout(layout)
 
+    def update_button_focus(self):
+        """ Cập nhật giao diện để focus vào nút tương ứng với file AHK đang chọn """
+        config = load_config("data/config.json")
+        for file_name, button in self.buttons.items():
+            if file_name == config.get("ahk_file", ""):
+                button.setStyleSheet(
+                    "background-color: green; color: white; font-weight: bold;")
+            else:
+                button.setStyleSheet("")  # Reset về mặc định
+
     def change_ahk(self, file_name):
         update_config("ahk_file", file_name)
-        print(f"Đã đổi sang {file_name}")
+        restart_qr_code_server()
+        self.update_button_focus()
+        QMessageBox.information(self, "Thông báo", f"Đã chuyển sang {file_name}")
+
 
     def save_config(self):
         """Lưu cấu hình vào file config.json"""
@@ -135,9 +165,7 @@ class ConfigWindow(QDialog):
             QMessageBox.Yes | QMessageBox.No, QMessageBox.No
         )
         if reply == QMessageBox.Yes:
-            update_config("api_url", self.url_entry.text())
             update_config("bank_number", self.bank_entry.text())
-            update_config("password", self.password_entry.text())
             update_config("token", self.token_entry.text())
             QMessageBox.information(self, "Thành công", "Đã lưu cấu hình!")
             self.close()
@@ -251,7 +279,7 @@ class MainWindow(QMainWindow):
         transactions = load_transactions("data/processed_transactions.json", last_id)
 
         # 🔹 Lọc ra các giao dịch mới
-        new_transactions = [t for t in transactions if t.get("transactionID", 0) > last_id]
+        new_transactions = [t for t in transactions if t.get("id", 0) > last_id]
         total_transactions = len(new_transactions)
         total_amount = sum(int(t.get("amount", 0)) for t in new_transactions if str(t.get("amount", "0")).isdigit())
 
@@ -266,12 +294,14 @@ class MainWindow(QMainWindow):
 
         # 🔹 Cập nhật last_id trong config
         if new_transactions:
-            new_last_id = max(t["transactionID"] for t in new_transactions)
+            new_last_id = max(t["id"] for t in new_transactions)
             update_config("last_id", new_last_id)
 
         # 🔹 Xoá dữ liệu hiển thị trên giao diện
         self.table.setRowCount(0)
         self.total_label.setText("Tổng Tiền: 0 VND")
+
+        restart_qr_code_server()
 
         QMessageBox.information(self, "Thành công", "Tổng kết doanh thu thành công!")
 
@@ -289,15 +319,54 @@ class MainWindow(QMainWindow):
         stop_qr_code_server()
         QApplication.quit()
 
+class CustomMessageBox(QDialog):
+    def __init__(self, title, message, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle(title)
+        self.setFixedSize(400, 255)
+        self.setStyleSheet("background-color: white; border-radius: 10px;")
+        self.setWindowIcon(QIcon("data/CAGPRO.ico"))
+
+        layout = QVBoxLayout()
+
+        # Thêm hình ảnh lỗi
+        icon_label = QLabel(self)
+        pixmap = QPixmap("data/CAGPRO.png")  # Thêm icon nếu có
+        icon_label.setPixmap(pixmap.scaled(90, 90, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        icon_label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(icon_label)
+
+        # Nội dung thông báo
+        message_label = QLabel(message, self)
+        message_label.setFont(QFont("Arial", 12))
+        message_label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(message_label)
+
+        # Nút đóng
+        ok_button = QPushButton("ĐÓNG", self)
+        ok_button.setStyleSheet("background-color: red; color: white; padding: 12px 40px; border-radius: 5px; font-size: 15px; font-weight: bold;")
+        ok_button.clicked.connect(self.accept)
+        layout.addWidget(ok_button, alignment=Qt.AlignCenter)
+
+        self.setLayout(layout)
+
+def show_custom_error(title, message):
+    app = QApplication(sys.argv)
+    dialog = CustomMessageBox(title, message)
+    dialog.exec_()
+    sys.exit()
 
 if __name__ == "__main__":
+    if not check_website(url_check):
+        show_custom_error("Lỗi Kích Hoạt", "❌ Chương trình chưa được kích hoạt! ❌\n❌ Vui lòng liên hệ CAGPRO. ❌")
+
     app = QApplication(sys.argv)
 
     shared_memory = QSharedMemory("TestUI_Unique_Instance")
     if not shared_memory.create(1):  # Kiểm tra nếu ứng dụng đã chạy
-        print("Ứng dụng đã chạy, không thể mở thêm!")
         sys.exit()
 
     window = MainWindow()
     window.show()
     sys.exit(app.exec_())
+
