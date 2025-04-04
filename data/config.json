@@ -1,6 +1,6 @@
 {
-    "last_id": 1790251,
-    "ahk_file": "CAGBank_NapTien_Gcafe.ahk",
+    "last_id": 1791423,
+    "ahk_file": "CAGBank_NapTien_CSM.ahk",
     "api_url": "https://my.pay2s.vn/userapi/transactions",
     "bank_number": "19745371",
     "token": "76030f80652559028160acbcae6fb0039585d4ed3604faec742731478a4d7526"

@@ -1,12 +1,18 @@
 ﻿SetTitleMatchMode, 2  ;
 
-TaiKhoan := "luu"
+TaiKhoan := "tien"
 SoTien := 2000
 
-WinActivate, Cyber Station Manager - [ Nhan vien: ADMIN (Admin) ] ;
+SetTitleMatchMode, 2  ;
+WinActivate, Cyber Station Manager
+Loop
+{
+    Send, {Esc}
+    Sleep, 100  ; Đợi 100ms giữa mỗi lần bấm
+    if WinActive("Cyber Station Manager")
+        break  ; Thoát vòng lặp nếu cửa sổ đã active
+}
 BlockInput, On  ;
-DllCall("ShowCursor", "Int", 0)  ;
-WinWaitActive, Cyber Station Manager - [ Nhan vien: ADMIN (Admin) ] ;
 CoordMode, Mouse, Screen  ;
 Sleep, 100 ;
 Click, 140, 100 ;

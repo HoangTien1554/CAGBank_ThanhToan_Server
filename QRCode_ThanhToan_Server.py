@@ -4,6 +4,7 @@ import time
 import json
 import os
 import base64
+from datetime import date, timedelta
 
 config_path = "data/config.json"
 file_path = "data/processed_transactions.json"
@@ -24,10 +25,16 @@ ahk_file = config["ahk_file"]
 token = config["token"]
 URL = config["api_url"]
 
+# Lấy ngày hôm qua
+yesterday = date.today() - timedelta(days=1)
+
+# Định dạng ngày theo DD/MM/YYYY
+yesterday_str = yesterday.strftime("%d/%m/%Y")
+
 # Dữ liệu truy vấn
 payload = {
     "bankAccounts": f"{bank_number}",  # Số tài khoản
-    "begin": "20/3/2025",  # Ngày bắt đầu (DD/MM/YYYY)
+    "begin": f"{yesterday_str}",  # Ngày bắt đầu (DD/MM/YYYY)
     "end": "31/3/2050"  # Ngày kết thúc (DD/MM/YYYY)
 }
 
@@ -63,37 +70,32 @@ def fetch_and_save_transactions():
         existing_transactions = load_transactions()
         existing_ids = {t["id"] for t in existing_transactions}
 
+        # Lấy last_id từ config
+        last_id = config.get("last_id", 0)
 
         # Chỉ lấy giao dịch tiền vào (type == "IN") và gán status "Chưa nạp tiền"
         new_transactions = [
             {
                 "id": t["id"],
-                "content": re.search(r'([a-z0-9\s]+)(?=\s*\d{6,}|\s*QR\s*|\s*GD|\s*$)',
+                "content": re.search(r'\b[a-z]+\b', t["description"]).group() if re.search(r'\b[a-z]+\b', t["description"]) else re.search(r'([a-z0-9\s]+)(?=\s*\d{6,}|\s*QR\s*|\s*GD|\s*$)',
                                      t["description"]).group().strip() if re.search(
                     r'([a-z0-9\s]+)(?=\s*\d{6,}|\s*QR\s*|\s*GD|\s*$)', t["description"]) else "",
                 "datetime": t["transaction_date"],
                 "amount": t["amount"],
-                "status": "Chưa nạp tiền"
+                "status": "Chưa nạp tiền",
             }
             for t in transactions if t["type"] == "IN" and t["id"] not in existing_ids and t["id"] > last_id
         ]
 
         # Cập nhật last_id nếu cần
-        max_new_id = max(t["id"] for t in transactions)
-        if config["last_id"] == 0:
-            update_config("last_id", max_new_id)
-
-
+        if transactions: # Thêm điều kiện để tránh lỗi nếu transactions rỗng
+            max_new_id = max(t["id"] for t in transactions)
+            if config["last_id"] == 0:
+                update_config("last_id", max_new_id)
 
         if new_transactions:
             existing_transactions.extend(new_transactions)
             save_transactions(existing_transactions)
-
-
-    else:
-        print(f"Lỗi API: {response.status_code} - {response.text}")
-
-
 
 # Chỉnh sửa file AHK và chạy AutoHotkey
 def execute_transaction(content, amount):
@@ -149,4 +151,4 @@ while True:
         time.sleep(3)  # Chờ 3 giây trước khi thực hiện giao dịch tiếp theo
 
     # Đợi 2 giây trước khi kiểm tra API tiếp
-    time.sleep(3.5)
+    time.sleep(5)

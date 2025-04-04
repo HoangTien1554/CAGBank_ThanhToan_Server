@@ -247,7 +247,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("Danh Sách Giao Dịch")
         self.setGeometry(100, 100, 800, 400)
-        self.setWindowIcon(QIcon("data/CAGPRO.ico"))
+        self.setWindowIcon(QIcon("data/CAGPRO.ico.ico"))
 
         menubar = self.menuBar()
         settings_menu = menubar.addMenu("Tuỳ chọn")
@@ -282,7 +282,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(container)
 
         self.tray_icon = QSystemTrayIcon(self)
-        self.tray_icon.setIcon(QIcon("data/CAGPRO.ico"))
+        self.tray_icon.setIcon(QIcon("data/CAGPRO.ico.ico"))
         self.tray_menu = QMenu()
 
         show_action = QAction("Mở lại", self)
@@ -405,13 +405,13 @@ class CustomMessageBox(QDialog):
         self.setWindowTitle(title)
         self.setFixedSize(400, 255)
         self.setStyleSheet("background-color: white; border-radius: 10px;")
-        self.setWindowIcon(QIcon("data/CAGPRO.ico"))
+        self.setWindowIcon(QIcon("data/CAGPRO.ico.ico"))
 
         layout = QVBoxLayout()
 
         # Thêm hình ảnh lỗi
         icon_label = QLabel(self)
-        pixmap = QPixmap("data/CAGPRO.png")  # Thêm icon nếu có
+        pixmap = QPixmap("data/CAGPRO.ico.png")  # Thêm icon nếu có
         icon_label.setPixmap(pixmap.scaled(90, 90, Qt.KeepAspectRatio, Qt.SmoothTransformation))
         icon_label.setAlignment(Qt.AlignCenter)
         layout.addWidget(icon_label)
@@ -441,7 +441,7 @@ def show_custom_error(title, message):
 
 if __name__ == "__main__":
     if not check_website(url_check):
-        show_custom_error("Lỗi Kích Hoạt", "❌ Chương trình chưa được kích hoạt! ❌\n❌ Vui lòng liên hệ CAGPRO. ❌")
+        show_custom_error("Lỗi Kích Hoạt", "❌ Chương trình chưa được kích hoạt! ❌\n❌ Vui lòng liên hệ CAGPRO.ico. ❌")
 
     app = QApplication(sys.argv)
 

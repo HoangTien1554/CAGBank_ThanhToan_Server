@@ -29,7 +29,7 @@ def check_website(url):
     try:
         response = requests.get(url)
         # Kiểm tra nếu mã trạng thái là 200 và nội dung trang chứa chuỗi cần tìm
-        if response.status_code == 200 and "Auto Bank Ver 1.0.0.0" in response.text:
+        if response.status_code == 200 and "Auto Bank Ver 1.0.0.1" in response.text:
             return True
         else:
             return False
@@ -73,14 +73,14 @@ def start_qr_code_server():
 
 def is_qr_code_running():
     for proc in psutil.process_iter(attrs=['name']):
-        if proc.info['name'] == "data/QRCode_ThanhToan_Server.exe":
+        if proc.info['name'] == "QRCode_ThanhToan_Server.exe":
             return True
     return False
 
 
 def stop_qr_code_server():
     for proc in psutil.process_iter(attrs=['name', 'pid']):
-        if proc.info['name'] == "data/QRCode_ThanhToan_Server.exe":
+        if proc.info['name'] == "QRCode_ThanhToan_Server.exe":
             proc.terminate()
 
 
@@ -411,7 +411,7 @@ class CustomMessageBox(QDialog):
 
         # Thêm hình ảnh lỗi
         icon_label = QLabel(self)
-        pixmap = QPixmap("data/CAGPRO.png")  # Thêm icon nếu có
+        pixmap = QPixmap("data/CAGPROCLOUD.png")  # Thêm icon nếu có
         icon_label.setPixmap(pixmap.scaled(90, 90, Qt.KeepAspectRatio, Qt.SmoothTransformation))
         icon_label.setAlignment(Qt.AlignCenter)
         layout.addWidget(icon_label)
@@ -441,7 +441,7 @@ def show_custom_error(title, message):
 
 if __name__ == "__main__":
     if not check_website(url_check):
-        show_custom_error("Lỗi Kích Hoạt", "❌ Chương trình chưa được kích hoạt! ❌\n❌ Vui lòng liên hệ CAGPRO. ❌")
+        show_custom_error("Lỗi Kích Hoạt", "❌ Chương trình chưa được kích hoạt! ❌\n❌ Vui lòng liên hệ CAGPRO ❌")
 
     app = QApplication(sys.argv)
 

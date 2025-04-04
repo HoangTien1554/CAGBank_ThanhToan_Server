@@ -346,18 +346,6 @@
    'C:\\Users\\CAG '
    'PRO\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\contextvars.py',
    'PYMODULE'),
-  ('datetime',
-   'C:\\Users\\CAG '
-   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\datetime.py',
-   'PYMODULE'),
-  ('_pydatetime',
-   'C:\\Users\\CAG '
-   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\_pydatetime.py',
-   'PYMODULE'),
-  ('_strptime',
-   'C:\\Users\\CAG '
-   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\_strptime.py',
-   'PYMODULE'),
   ('hmac',
    'C:\\Users\\CAG '
    'PRO\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\hmac.py',
@@ -666,21 +654,33 @@
    'C:\\Users\\CAG '
    'PRO\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\multiprocessing\\__init__.py',
    'PYMODULE'),
+  ('_py_abc',
+   'C:\\Users\\CAG '
+   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\_py_abc.py',
+   'PYMODULE'),
   ('stringprep',
    'C:\\Users\\CAG '
    'PRO\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\stringprep.py',
    'PYMODULE'),
-  ('_py_abc',
+  ('tracemalloc',
    'C:\\Users\\CAG '
-   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\_py_abc.py',
+   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\tracemalloc.py',
    'PYMODULE'),
   ('_colorize',
    'C:\\Users\\CAG '
    'PRO\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\_colorize.py',
    'PYMODULE'),
-  ('tracemalloc',
+  ('datetime',
    'C:\\Users\\CAG '
-   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\tracemalloc.py',
+   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\datetime.py',
+   'PYMODULE'),
+  ('_pydatetime',
+   'C:\\Users\\CAG '
+   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\_pydatetime.py',
+   'PYMODULE'),
+  ('_strptime',
+   'C:\\Users\\CAG '
+   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\_strptime.py',
    'PYMODULE'),
   ('base64',
    'C:\\Users\\CAG '
@@ -1206,13 +1206,13 @@
    'C:\\Users\\CAG '
    'PRO\\AppData\\Local\\Programs\\Python\\Python313\\VCRUNTIME140.dll',
    'BINARY'),
-  ('libssl-3.dll',
-   'C:\\Users\\CAG '
-   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\libssl-3.dll',
-   'BINARY'),
   ('libcrypto-3.dll',
    'C:\\Users\\CAG '
    'PRO\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\libcrypto-3.dll',
+   'BINARY'),
+  ('libssl-3.dll',
+   'C:\\Users\\CAG '
+   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\libssl-3.dll',
    'BINARY'),
   ('libffi-8.dll',
    'C:\\Users\\CAG '
@@ -1220,13 +1220,13 @@
    'BINARY')],
  [],
  [],
- [('certifi\\py.typed',
-   'C:\\Users\\CAG '
-   'PRO\\PycharmProjects\\CAGBank_Main\\.venv\\Lib\\site-packages\\certifi\\py.typed',
-   'DATA'),
-  ('certifi\\cacert.pem',
+ [('certifi\\cacert.pem',
    'C:\\Users\\CAG '
    'PRO\\PycharmProjects\\CAGBank_Main\\.venv\\Lib\\site-packages\\certifi\\cacert.pem',
+   'DATA'),
+  ('certifi\\py.typed',
+   'C:\\Users\\CAG '
+   'PRO\\PycharmProjects\\CAGBank_Main\\.venv\\Lib\\site-packages\\certifi\\py.typed',
    'DATA'),
   ('base_library.zip',
    'C:\\Users\\CAG '

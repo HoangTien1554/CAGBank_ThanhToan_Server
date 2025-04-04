@@ -149,25 +149,25 @@
    'C:\\Users\\CAG '
    'PRO\\AppData\\Local\\Programs\\Python\\Python313\\VCRUNTIME140.dll',
    'BINARY'),
-  ('libssl-3.dll',
-   'C:\\Users\\CAG '
-   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\libssl-3.dll',
-   'BINARY'),
   ('libcrypto-3.dll',
    'C:\\Users\\CAG '
    'PRO\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\libcrypto-3.dll',
+   'BINARY'),
+  ('libssl-3.dll',
+   'C:\\Users\\CAG '
+   'PRO\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\libssl-3.dll',
    'BINARY'),
   ('libffi-8.dll',
    'C:\\Users\\CAG '
    'PRO\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\libffi-8.dll',
    'BINARY'),
-  ('certifi\\py.typed',
-   'C:\\Users\\CAG '
-   'PRO\\PycharmProjects\\CAGBank_Main\\.venv\\Lib\\site-packages\\certifi\\py.typed',
-   'DATA'),
   ('certifi\\cacert.pem',
    'C:\\Users\\CAG '
    'PRO\\PycharmProjects\\CAGBank_Main\\.venv\\Lib\\site-packages\\certifi\\cacert.pem',
+   'DATA'),
+  ('certifi\\py.typed',
+   'C:\\Users\\CAG '
+   'PRO\\PycharmProjects\\CAGBank_Main\\.venv\\Lib\\site-packages\\certifi\\py.typed',
    'DATA'),
   ('base_library.zip',
    'C:\\Users\\CAG '
@@ -176,7 +176,7 @@
  [],
  False,
  False,
- 1743569395,
+ 1743662868,
  [('run.exe',
    'C:\\Users\\CAG '
    'PRO\\PycharmProjects\\CAGBank_Main\\.venv\\Lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit-intel\\run.exe',

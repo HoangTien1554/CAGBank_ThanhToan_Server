@@ -1,7 +1,7 @@
 ﻿SetTitleMatchMode, 2  ;
 
-TaiKhoan := "nam001"
-SoTien := 3348
+TaiKhoan := "tien"
+SoTien := 12000
 
 BlockInput, On  ;
 SetTitleMatchMode, 2  ; Cho phép tìm kiếm tiêu đề chứa chuỗi con
